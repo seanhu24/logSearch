@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>日志查询平台</title>
+    </head>
+    <body>
+    监控日志清单：<br/>
+    {% if syslist %}
+        {% for key,value in syslist.items() %}
+            <li> {{ key}} : {{ value }} </li>
+        {% endfor %}
+    {% endif %}
+
+    </body>
+</html>
