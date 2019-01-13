@@ -3,8 +3,11 @@
 {% block content %}
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
+        {% if errormsg %}
+            <h1>{{ errormsg }}</h1>
+        {% endif %}
         {{ form.filename.label }}<br>
-        {{ form.filename }}<br>
+        {{ form.filename(size=100) }}<br>
         {% for error in form.filename.errors %}
             <span style="color: red;">[{{ error }}]</span>
         {% endfor %}

@@ -28,19 +28,23 @@ def index():
             grep_results.extend(sf.grep_file(file, keyword, 0))
 
         return render_template('search_result.html', form=form,
-                        dir_location=dir_location, file_pattern=file_pattern, keyword=keyword, grep_results=grep_results)
+                               dir_location=dir_location, file_pattern=file_pattern, keyword=keyword, grep_results=grep_results)
     return render_template('index.html', form=form)
 
 
 @app.route('/download', methods=['POST', 'GET'])
 def download():
-    form=DownloadForm()
+    form = DownloadForm()
     if form.validate_on_submit():
         flash('下载文件:{}'.format(form.filename.data))
-        print("$$$"+form.filename.data)
-        return send_file(form.filename.data, as_attachment=True)
+        # print("$$$"+form.filename.data)
+        try:
+            return send_file(form.filename.data, as_attachment=True)
+        except FileNotFoundError:
+            return render_template('download.html', form=form, errormsg='找不到文件')
 
     return render_template('download.html', form=form)
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
