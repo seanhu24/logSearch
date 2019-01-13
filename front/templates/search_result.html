@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if grep_results %}
+        
+        <div>
+            <table  style="width:100%">
+            <thead>
+                <th>文件</th>
+                <th>结果</th> 
+            </thead>
+            {% for res in grep_results %}
+                {% for k, v in res.items() %}
+                    <tr>
+                        <td>{{ k }}</td>
+                        <td>{{ v }}</td> 
+                    </tr>
+                {% endfor %}
+
+  {% endfor %}
+            </table>
+        </div>
+    {% else %}
+    <h1> 没有查询结果</h1>
+    {% endif %}
+{% endblock content %}

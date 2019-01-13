@@ -1,14 +1,26 @@
-<html>
-    <head>
-        <title>日志查询平台</title>
-    </head>
-    <body>
-    监控日志清单：<br/>
-    {% if syslist %}
-        {% for key,value in syslist.items() %}
-            <li> {{ key}} : {{ value }} </li>
-        {% endfor %}
-    {% endif %}
+{% extends "base.html" %}
 
-    </body>
-</html>
+{% block content %}
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.server.label }}<br>
+            {{ form.server }}<br>
+        </p>
+        <p>
+            {{ form.file_pattern.label }}<br>
+            {{ form.file_pattern }}<br>
+        </p>
+        <p>
+            {{ form.keyword.label }}<br>
+            {{ form.keyword }}<br>
+            {% for error in form.keyword.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+{% endblock content %}
+
+

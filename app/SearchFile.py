@@ -5,20 +5,21 @@ from glob import glob
 
 class SearchFile():
     def __init__(self, filedir):
-        self.filedir = filedir
+        self.filedir = filedir[1:-1]+"\**"
 
     def get_all_files(self, *args):
         if len(args) == 0:
-            return [f for f in glob(os.path.join(self.filedir, '*')) if os.path.isfile(f)]
+            return [f for f in glob(os.path.join(self.filedir, '*'), recursive=True) if os.path.isfile(f)]
         else:
             ret_list = []
             for r in args:
                 ret_list.extend(
-                    [f for f in glob(os.path.join(self.filedir, r)) if os.path.isfile(f)])
-
+                    [f for f in glob(os.path.join(self.filedir, r), recursive=True) if os.path.isfile(f)])
+                # print(ret_list)
             return list(set(ret_list))
 
     def grep_file(self, filename, keyword, regr):
+        print("finding {} in {}".format(keyword, filename))
         ret = []
         if regr == 0:
             with open(filename, 'r') as f:
@@ -33,6 +34,7 @@ class SearchFile():
                     if re.search(pat, line, re.IGNORECASE):
                         ret.append({filename: line.strip()})
 
+        # print(ret)
         return ret
 
 
