@@ -14,12 +14,17 @@ class LoginForm(FlaskForm):
 class SearchForm(FlaskForm):
     gc = GetConfig()
     choices = []
-    choices.extend([(v,k) for k,v in gc.get_paras().items()])
+    choices.extend([(v, k) for k, v in gc.get_paras().items()])
     # print(choices)
     server = SelectField('选择系统', choices=choices)
     file_pattern = StringField('文件模式')
     keyword = StringField('关键字', validators=[DataRequired()])
     submit = SubmitField('提交')
+
+
+class DownloadForm(FlaskForm):
+    filename = StringField('文件绝对路径', validators=[DataRequired()])
+    submit = SubmitField('下载')
 
 
 if __name__ == "__main__":

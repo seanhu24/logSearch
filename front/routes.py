@@ -1,6 +1,6 @@
 from front import app
-from flask import render_template, flash, redirect, url_for
-from front.forms import LoginForm, SearchForm
+from flask import render_template, flash, redirect, url_for, send_file
+from front.forms import LoginForm, SearchForm, DownloadForm
 from utils.GetConfig import GetConfig
 from app.SearchFile import SearchFile
 
@@ -27,12 +27,20 @@ def index():
         for file in files:
             grep_results.extend(sf.grep_file(file, keyword, 0))
 
-        # print(grep_result)
-
         return render_template('search_result.html', form=form,
                         dir_location=dir_location, file_pattern=file_pattern, keyword=keyword, grep_results=grep_results)
     return render_template('index.html', form=form)
 
+
+@app.route('/download', methods=['POST', 'GET'])
+def download():
+    form=DownloadForm()
+    if form.validate_on_submit():
+        flash('下载文件:{}'.format(form.filename.data))
+        print("$$$"+form.filename.data)
+        return send_file(form.filename.data, as_attachment=True)
+
+    return render_template('download.html', form=form)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
