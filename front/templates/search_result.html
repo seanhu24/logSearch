@@ -7,7 +7,7 @@
         <div>
             {% for res in grep_results %}
                 {% for k, v in res.items() %}
-                    {{ k }}:{{ v }}<br>
+                    {{ k|safe}}:{{ v|safe }}<br>
                 {% endfor %}
             {% endfor %}
         </div>

@@ -5,7 +5,7 @@ from glob import glob
 
 class SearchFile():
     def __init__(self, filedir):
-        self.filedir = filedir[1:-1]+"\**"
+        self.filedir = filedir + "\**"
 
     def get_all_files(self, *args):
         if len(args) == 0:
@@ -15,7 +15,6 @@ class SearchFile():
             for r in args:
                 ret_list.extend(
                     [f for f in glob(os.path.join(self.filedir, r), recursive=True) if os.path.isfile(f)])
-                # print(ret_list)
             return list(set(ret_list))
 
     def grep_file(self, filename, keyword, regr):
@@ -25,20 +24,28 @@ class SearchFile():
             with open(filename, 'r') as f:
                 for line in f.readlines():
                     if re.search(keyword, line, re.IGNORECASE):
-                        ret.append({filename: line.strip()})
+                        new_keyword = '<span style="background-color:#FFFF00;">' + keyword + '</span>'
+                        ret.append(
+                            {filename: re.sub(keyword, new_keyword, line.strip())})
 
         else:  # something wrong with it
+            # print('$1', filename)
             pat = re.compile(keyword)
             with open(filename, 'r') as f:
                 for line in f.readlines():
                     if re.search(pat, line, re.IGNORECASE):
-                        ret.append({filename: line.strip()})
+                        new_keyword = '<span style="background-color:#FFFF00;">' + keyword + '</span>'
+                        old_line = line.strip()
+                        new_line = re.sub(keyword, new_keyword, line.strip())
+                        print(old_line, new_line)
+                        ret.append(
+                            {filename: re.sub(keyword, new_keyword, line.strip())})
 
-        # print(ret)
+        print(ret)
         return ret
 
 
 if __name__ == "__main__":
     sf = SearchFile('d:\p_proj\log_example\dir1')
-    print(sf.get_all_files('log2.*', 'log1.*'))
-    print(sf.grep_file('d:\\p_proj\\log_example\\dir1\\log2.log', 'LOG8', 0))
+    print(sf.get_all_files('*.log'))
+    # print(sf.grep_file('d:\\p_proj\\log_example\\dir1\\log2.log', 'LOG8', 0))

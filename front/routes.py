@@ -3,33 +3,59 @@ from flask import render_template, flash, redirect, url_for, send_file
 from front.forms import LoginForm, SearchForm, DownloadForm
 from utils.GetConfig import GetConfig
 from app.SearchFile import SearchFile
+import json
 
 
 @app.route('/')
 @app.route('/index', methods=['POST', 'GET'])
 def index():
     form = SearchForm()
-    if form.validate_on_submit():
+    try:
+        if form.validate_on_submit():
 
-        dir_location = form.server.data
-        file_pattern = form.file_pattern.data
-        keyword = form.keyword.data
-        flash('查询路径:{},文件模式:{},查询条件:{}'.format(
-            dir_location, file_pattern, keyword))
+            dir_locations = json.loads(form.server.data)
+            # print(type(dir_locations))
+            # print("$$", dir_locations)
+            file_pattern = form.file_pattern.data
+            keyword = form.keyword.data
 
-        sf = SearchFile(dir_location)
-        if file_pattern == '':
-            files = sf.get_all_files()
-        else:
-            files = sf.get_all_files(file_pattern)
+            flash('查询路径:{},文件模式:{},查询条件:{}'.format(
+                dir_locations, file_pattern, keyword))
 
-        grep_results = []
-        for file in files:
-            grep_results.extend(sf.grep_file(file, keyword, 0))
+            files = []
+            for dir_location in dir_locations:
+                # print('$', dir_location)
+                sf = SearchFile(dir_location)
+                if file_pattern == '':
+                    files.extend(sf.get_all_files())
+                else:
+                    print(file_pattern)
+                    files.extend(sf.get_all_files(file_pattern))
+            # print(files)
+            grep_results = []
+            for file in files:
+                grep_results.extend(sf.grep_file(file, keyword, 0))
 
-        return render_template('search_result.html', form=form,
-                               dir_location=dir_location, file_pattern=file_pattern, keyword=keyword, grep_results=grep_results)
+            format_res = []
+            for res in grep_results:
+                for k, v in res.items():
+                    k2 = '<a href=' + \
+                        url_for('download_a_file', fname=k) + '>' + k + '</a>'
+                format_res.append({k2: v})
+            return render_template('search_result.html', form=form,
+                                   dir_location=dir_locations, file_pattern=file_pattern, keyword=keyword, grep_results=format_res)
+    except Exception as e:
+        print(e)
     return render_template('index.html', form=form)
+
+
+@app.route('/download_a_file/<fname>', methods=['POST', 'GET'])
+def download_a_file(fname):
+    flash('下载文件:{}'.format(fname))
+    try:
+        return send_file(fname, as_attachment=True)
+    except FileNotFoundError:
+        render_template('download.html', form=form, errormsg='找不到文件')
 
 
 @app.route('/download', methods=['POST', 'GET'])

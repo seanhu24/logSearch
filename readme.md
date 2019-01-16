@@ -7,5 +7,5 @@
 > export FLASK_ENV=development
 
 ## 目录配置文件
-config.ini
+config.py
 

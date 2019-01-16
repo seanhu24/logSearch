@@ -2,6 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 from utils.GetConfig import GetConfig
+from config import *
+import json
 
 
 class LoginForm(FlaskForm):
@@ -12,9 +14,13 @@ class LoginForm(FlaskForm):
 
 
 class SearchForm(FlaskForm):
-    gc = GetConfig()
+    # gc = GetConfig()
     choices = []
-    choices.extend([(v, k) for k, v in gc.get_paras().items()])
+
+    for sys in MONITOR_DIR:
+        for k, v in sys.items():
+            choices.append((json.dumps(v), k))
+    # choices.extend([(v, k) for k, v in gc.get_paras().items()])
     # print(choices)
     server = SelectField('选择系统', choices=choices)
     file_pattern = StringField('文件模式')

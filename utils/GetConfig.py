@@ -2,6 +2,7 @@ import os
 import configparser
 
 
+
 class GetConfig():
 
     def __init__(self):
@@ -13,6 +14,8 @@ class GetConfig():
 
     def get_paras(self):
         return dict(self.config_file['list'])
+
+
 
 
 if __name__ == "__main__":

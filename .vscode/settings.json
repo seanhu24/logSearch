@@ -1,0 +1,35 @@
+{
+    "python.pythonPath": "D:\\p_proj\\envs\\log_search-U2IltC8h\\Scripts\\python.exe",
+    "python.linting.pep8Enabled": true,
+    "python.linting.pylintPath": "D:\\p_proj\\envs\\log_search-U2IltC8h\\Scripts\\pylint.exe",
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        80,
+        120
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/*.pyc": true,
+        ".idea": true,
+    },
+    "workbench.editor.enablePreview": false,
+    "python.linting.pylintArgs": [
+        "--load-plugin",
+        "pylint-django"
+    ],
+    "python.formatting.autopep8Path": "D:\\p_proj\\envs\\log_search-U2IltC8h\\Scripts\\autopep8.exe",
+    "python.linting.pep8Path": "D:\\p_proj\\envs\\log_search-U2IltC8h\\Scripts\\pep8.exe",
+    "editor.fontSize": 16,
+    "editor.fontFamily": "Source Code Pro, Consolas, 'Courier New', monospace",
+    "python.linting.pep8Args": [
+        "--ignore=E501",
+        "--ignore=E402",
+    ],
+    "python.formatting.autopep8Args": [
+        "--ignore=E402"
+    ],
+}
