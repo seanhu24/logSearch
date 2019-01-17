@@ -5,7 +5,7 @@ from glob import glob
 
 class SearchFile():
     def __init__(self, filedir):
-        self.filedir = filedir + "\**"
+        self.filedir = os.path.join(filedir, "**")
 
     def get_all_files(self, *args):
         if len(args) == 0:

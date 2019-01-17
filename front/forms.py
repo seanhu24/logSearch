@@ -7,9 +7,9 @@ import json
 
 
 class LoginForm(FlaskForm):
-    username = StringField('用户', validators=[DataRequired()])
-    password = PasswordField('密码', validators=[DataRequired()])
-    remember_me = BooleanField('记住我')
+    username = StringField('手机号', validators=[DataRequired()])
+    password = PasswordField('验证码', validators=[DataRequired()])
+    # remember_me = BooleanField('记住我')
     submit = SubmitField('登陆')
 
 
