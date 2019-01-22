@@ -1,11 +1,24 @@
 import os
 import re
+import subprocess
 from glob import glob
 
 
 class SearchFile():
     def __init__(self, filedir):
         self.filedir = os.path.join(filedir, "**")
+
+    def do_grep(self, filename, keyword):
+        coms = ['grep', '-R', '-e']
+        coms.append(keyword)
+        coms.append(filename)
+        print('do grep as :', coms)
+        cmd = subprocess.Popen(
+            coms, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, error = cmd.communicate()
+        ret_lines = ''.join(stdout.decode('UTF-8'))
+        print(ret_lines)
+        return ret_lines
 
     def get_all_files(self, *args):
         if len(args) == 0:

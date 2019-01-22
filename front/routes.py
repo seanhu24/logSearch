@@ -28,33 +28,64 @@ def index():
             flash('查询路径:{},文件模式:{},查询条件:{}'.format(
                 dir_locations, file_pattern, keyword))
 
-            files = []
-            for dir_location in dir_locations:
-                # print('$', dir_location)
-                sf = SearchFile(os.path.join(
-                    dir_location, file_pattern_split[0]))
-                if file_pattern == '':
-                    files.extend(sf.get_all_files())
-                else:
-                    print(file_pattern)
-                    files.extend(sf.get_all_files(file_pattern))
-            # print(files)
+            # 调用系统grep命令
             grep_results = []
-            for file in files:
-                grep_results.extend(sf.grep_file(file, keyword, 0))
+            for dir_location in dir_locations:
+                sf = SearchFile(dir_location)
+                grep_results.extend(sf.do_grep(
+                    dir_location, keyword).split('\n'))
 
-            format_res = []
-            for res in grep_results:
-                for k, v in res.items():
-
+            format_results = []
+            for grep_result in grep_results:
+                if len(grep_result.split(':')) > 1:
+                    k = grep_result.split(':')[0]
+                    v = ':' + ''.join(grep_result.split(':')[1:])
                     path = '?'.join(os.path.normpath(k).split(os.sep))
 
                     k2 = '<a href=' + \
                         url_for('download_a_file', fname=path) + \
                         '>' + k + '</a>'
-                format_res.append({k2: v})
-            return render_template('search_result.html', form=form,
-                                   dir_location=dir_locations, file_pattern=file_pattern, keyword=keyword, grep_results=format_res)
+
+                    format_results.append(k2 + v)
+                else:
+                    format_results.append(grep_result)
+
+            print('grep result:', grep_results)
+            print('format_res:', format_results)
+            return render_template('search_result.html',
+                                   form=form,
+                                   dir_location=dir_locations,
+                                   file_pattern=file_pattern,
+                                   keyword=keyword,
+                                   grep_results=format_results)
+
+            # files = []
+            # for dir_location in dir_locations:
+            #     # print('$', dir_location)
+            #     sf = SearchFile(os.path.join(
+            #         dir_location, file_pattern_split[0]))
+            #     if file_pattern == '':
+            #         files.extend(sf.get_all_files())
+            #     else:
+            #         print(file_pattern)
+            #         files.extend(sf.get_all_files(file_pattern))
+            # # print(files)
+            # grep_results = []
+            # for file in files:
+            #     grep_results.extend(sf.grep_file(file, keyword, 0))
+
+            # format_res = []
+            # for res in grep_results:
+            #     for k, v in res.items():
+
+            #         path = '?'.join(os.path.normpath(k).split(os.sep))
+
+            #         k2 = '<a href=' + \
+            #             url_for('download_a_file', fname=path) + \
+            #             '>' + k + '</a>'
+            #     format_res.append({k2: v})
+            # return render_template('search_result.html', form=form,
+            #                        dir_location=dir_locations, file_pattern=file_pattern, keyword=keyword, grep_results=format_res)
     except Exception as e:
         print(e)
     return render_template('index.html', form=form)

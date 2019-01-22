@@ -6,9 +6,12 @@
         {% if grep_results %}
         <div>
             {% for res in grep_results %}
+            {#
                 {% for k, v in res.items() %}
                     {{ k|safe}}:{{ v|safe }}<br>
-                {% endfor %}
+                {% endfor %}  
+            #}
+                {{ res|safe }}<br>
             {% endfor %}
         </div>
         {% else %}
