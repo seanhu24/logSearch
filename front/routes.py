@@ -1,6 +1,6 @@
 from front import app
 from flask import render_template, flash, redirect, url_for, send_file
-from front.forms import LoginForm, SearchForm, DownloadForm
+from front.forms import LoginForm, SearchForm, DownloadForm, ListForm
 from utils.GetConfig import GetConfig
 from app.SearchFile import SearchFile
 import json
@@ -21,9 +21,9 @@ def index():
             file_pattern = form.file_pattern.data
             keyword = form.keyword.data
 
-            file_pattern_split = os.path.split(file_pattern)
+            # file_pattern_split = os.path.split(file_pattern)
 
-            file_pattern = file_pattern_split[1]
+            # file_pattern = file_pattern_split[1]
 
             flash('查询路径:{},文件模式:{},查询条件:{}'.format(
                 dir_locations, file_pattern, keyword))
@@ -33,7 +33,7 @@ def index():
             for dir_location in dir_locations:
                 sf = SearchFile(dir_location)
                 grep_results.extend(sf.do_grep(
-                    dir_location, keyword).split('\n'))
+                    dir_location, keyword, file_pattern).split('\n'))
 
             format_results = []
             for grep_result in grep_results:
@@ -89,6 +89,25 @@ def index():
     except Exception as e:
         print(e)
     return render_template('index.html', form=form)
+
+
+@app.route('/list', methods=['POST', 'GET'])
+def list():
+    pass
+    # form = ListForm()
+    # try:
+    #     if form.validate_on_submit():
+    #         dir_locations = json.loads(form.server.data)
+    #         file_pattern = form.file_pattern.data
+
+    #         flash('查询路径:{},文件模式:{}'.format(
+    #             dir_locations, file_pattern))
+
+    #         list_results = []
+    #         for dir_location in dir_locations:
+    #             sf = SearchFile(dir_location)
+    #             list_results.extend(sf.do_list(
+    #                 dir_location, file_pattern).split('\n'))
 
 
 @app.route('/download_a_file/<fname>', methods=['POST', 'GET'])

@@ -8,17 +8,29 @@ class SearchFile():
     def __init__(self, filedir):
         self.filedir = os.path.join(filedir, "**")
 
-    def do_grep(self, filename, keyword):
-        coms = ['grep', '-R', '-e']
+    def do_grep(self, filename, keyword, filepattern):
+        print('##', filename, keyword, filepattern)
+        coms = ['grep', '-a', '-R', '-e']
         coms.append(keyword)
-        coms.append(filename)
+        if filepattern == '':
+            coms.append(os.path.join(filename, '*'))
+        else:
+            coms.append(os.path.join(filename, filepattern))
         print('do grep as :', coms)
+        s = ' '.join(coms)
+        print('do grep as :', s)
         cmd = subprocess.Popen(
-            coms, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            s, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # cmd = subprocess.Popen(
+        #     coms, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, error = cmd.communicate()
         ret_lines = ''.join(stdout.decode('UTF-8'))
         print(ret_lines)
         return ret_lines
+
+    def do_list(self, filename, filepattern):
+        res = []
+        return ret
 
     def get_all_files(self, *args):
         if len(args) == 0:

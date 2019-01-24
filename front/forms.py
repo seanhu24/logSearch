@@ -28,6 +28,20 @@ class SearchForm(FlaskForm):
     submit = SubmitField('提交')
 
 
+class ListForm(FlaskForm):
+    # gc = GetConfig()
+    choices = []
+
+    for sys in MONITOR_DIR:
+        for k, v in sys.items():
+            choices.append((json.dumps(v), k))
+    # choices.extend([(v, k) for k, v in gc.get_paras().items()])
+    # print(choices)
+    server = SelectField('选择系统', choices=choices)
+    file_pattern = StringField('文件模式')
+    submit = SubmitField('提交')
+
+
 class DownloadForm(FlaskForm):
     filename = StringField('文件绝对路径', validators=[DataRequired()])
     submit = SubmitField('下载')

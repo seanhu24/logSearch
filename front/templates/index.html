@@ -9,11 +9,11 @@
         </p>
         <p>
             {{ form.file_pattern.label }}<br>
-            {{ form.file_pattern }}<br>
+            {{ form.file_pattern(size=100) }}<br>
         </p>
         <p>
             {{ form.keyword.label }}<br>
-            {{ form.keyword }}<br>
+            {{ form.keyword(size=100) }}<br>
             {% for error in form.keyword.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
