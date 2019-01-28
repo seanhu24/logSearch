@@ -2,8 +2,8 @@ import os
 
 
 MONITOR_DIR = [
-    {'sys1': ['d:\p_proj\log_example\dir1', 'd:\p_proj\log_example\dir4']},
-    {'server2': ['d:\p_proj\log_example\dir2']}
+    {'sys1': ['d:\p_proj\log_example\dir[12]']},
+    {'server2': ['d:\p_proj\log_example\dir4']}
 ]
 
 

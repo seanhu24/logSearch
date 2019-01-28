@@ -7,10 +7,11 @@ from glob import glob
 class SearchFile():
     def __init__(self, filedir):
         self.filedir = os.path.join(filedir, "**")
+        # self.filedir = filedir
 
     def do_grep(self, filename, keyword, filepattern):
         print('##', filename, keyword, filepattern)
-        coms = ['grep', '-a', '-R', '-e']
+        coms = ['grep', '-a', '-n', '-R', '-e']
         coms.append(keyword)
         if filepattern == '':
             coms.append(os.path.join(filename, '*'))
@@ -28,8 +29,22 @@ class SearchFile():
         print(ret_lines)
         return ret_lines
 
-    def do_list(self, filename, filepattern):
+
+# print([f for f in glob('d:\p_proj\log_example\dir1\**\*.log',
+#                        recursive=True) if os.path.isfile(f)])
+
+    def do_list(self, filepattern):
         res = []
+        print(self.filedir)
+        path = os.path.join(self.filedir, filepattern)
+        # print(path)
+        print('finding:', path)
+        if filepattern == '':
+            ret = [f for f in glob(os.path.join(
+                path, '*'), recursive=True) if os.path.isfile(f)]
+        else:
+            ret = [f for f in glob(path, recursive=True) if os.path.isfile(f)]
+        print('file list:', ret)
         return ret
 
     def get_all_files(self, *args):
@@ -72,5 +87,7 @@ class SearchFile():
 
 if __name__ == "__main__":
     sf = SearchFile('d:\p_proj\log_example\dir1')
-    print(sf.get_all_files('*.log'))
+    print(sf.filedir)
+    print(sf.do_list('*.log'))
+
     # print(sf.grep_file('d:\\p_proj\\log_example\\dir1\\log2.log', 'LOG8', 0))

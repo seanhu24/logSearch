@@ -16,14 +16,8 @@ def index():
         if form.validate_on_submit():
 
             dir_locations = json.loads(form.server.data)
-            # print(type(dir_locations))
-            # print("$$", dir_locations)
             file_pattern = form.file_pattern.data
             keyword = form.keyword.data
-
-            # file_pattern_split = os.path.split(file_pattern)
-
-            # file_pattern = file_pattern_split[1]
 
             flash('查询路径:{},文件模式:{},查询条件:{}'.format(
                 dir_locations, file_pattern, keyword))
@@ -39,14 +33,17 @@ def index():
             for grep_result in grep_results:
                 if len(grep_result.split(':')) > 1:
                     k = grep_result.split(':')[0]
-                    v = ':' + ''.join(grep_result.split(':')[1:])
+                    n = ' : <font color="yellowgreen">' + \
+                        grep_result.split(':')[1] + '</font>'
+                    newkey = '<font color="orangered">' + keyword + '</font>'
+                    v = ' : ' + ''.join(grep_result.split(':')[2:])
                     path = '?'.join(os.path.normpath(k).split(os.sep))
 
                     k2 = '<a href=' + \
                         url_for('download_a_file', fname=path) + \
                         '>' + k + '</a>'
 
-                    format_results.append(k2 + v)
+                    format_results.append(k2 + n + v.replace(keyword, newkey))
                 else:
                     format_results.append(grep_result)
 
@@ -58,34 +55,6 @@ def index():
                                    file_pattern=file_pattern,
                                    keyword=keyword,
                                    grep_results=format_results)
-
-            # files = []
-            # for dir_location in dir_locations:
-            #     # print('$', dir_location)
-            #     sf = SearchFile(os.path.join(
-            #         dir_location, file_pattern_split[0]))
-            #     if file_pattern == '':
-            #         files.extend(sf.get_all_files())
-            #     else:
-            #         print(file_pattern)
-            #         files.extend(sf.get_all_files(file_pattern))
-            # # print(files)
-            # grep_results = []
-            # for file in files:
-            #     grep_results.extend(sf.grep_file(file, keyword, 0))
-
-            # format_res = []
-            # for res in grep_results:
-            #     for k, v in res.items():
-
-            #         path = '?'.join(os.path.normpath(k).split(os.sep))
-
-            #         k2 = '<a href=' + \
-            #             url_for('download_a_file', fname=path) + \
-            #             '>' + k + '</a>'
-            #     format_res.append({k2: v})
-            # return render_template('search_result.html', form=form,
-            #                        dir_location=dir_locations, file_pattern=file_pattern, keyword=keyword, grep_results=format_res)
     except Exception as e:
         print(e)
     return render_template('index.html', form=form)
@@ -93,21 +62,31 @@ def index():
 
 @app.route('/list', methods=['POST', 'GET'])
 def list():
-    pass
-    # form = ListForm()
-    # try:
-    #     if form.validate_on_submit():
-    #         dir_locations = json.loads(form.server.data)
-    #         file_pattern = form.file_pattern.data
+    form = ListForm()
+    try:
+        if form.validate_on_submit():
+            dir_locations = json.loads(form.server.data)
+            file_pattern = form.file_pattern.data
 
-    #         flash('查询路径:{},文件模式:{}'.format(
-    #             dir_locations, file_pattern))
+            flash('查询路径:{},文件模式:{}'.format(
+                dir_locations, file_pattern))
 
-    #         list_results = []
-    #         for dir_location in dir_locations:
-    #             sf = SearchFile(dir_location)
-    #             list_results.extend(sf.do_list(
-    #                 dir_location, file_pattern).split('\n'))
+            list_results = []
+            for dir_location in dir_locations:
+                sf = SearchFile(dir_location)
+                list_results.extend(sf.do_list(file_pattern))
+
+            format_res = []
+            for res in list_results:
+                path = '?'.join(os.path.normpath(res).split(os.sep))
+                format_res.append('<a href='
+                                  + url_for('download_a_file', fname=path)
+                                  + '>' + res + '</a>')
+            print(format_res)
+            return render_template('list_result.html', form=form, list_results=format_res)
+    except Exception as e:
+        print(e)
+    return render_template('list.html', form=form)
 
 
 @app.route('/download_a_file/<fname>', methods=['POST', 'GET'])

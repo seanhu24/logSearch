@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        {% if list_results %}
+        <div>
+            {% for res in list_results %}
+                {{ res|safe }}<br>
+            {% endfor %}
+        </div>
+        {% else %}
+        <h1> 没有查询结果</h1>
+        {% endif %}
+    </form>
+
+{% endblock content %}
